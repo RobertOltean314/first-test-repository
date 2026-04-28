@@ -1,0 +1,12 @@
+!SESSION 2026-04-22 20:56:44.573 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=17.0.9
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_US
+Command-line arguments:  -os linux -ws gtk -arch x86_64
+
+!ENTRY com.nxp.mcuxpresso.core.datamodels 1 0 2026-04-22 20:57:00.553
+!MESSAGE Recreating part support. No part support available.
+
+!ENTRY com.nxp.mcuxpresso.core.datamodels 1 0 2026-04-22 20:57:04.162
+!MESSAGE The device 'MCXN947' (version='1.0.0') from SDK 'SDK_2.x_FRDM-MCXN947' (version='26.03.00', build='928 2026-03-27') will be installed.

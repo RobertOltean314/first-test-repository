@@ -1,0 +1,11 @@
+17:28:56 **** Incremental Build of configuration Debug for project collector ****
+make -r -j8 all 
+make[1]: Nothing to be done for 'main-build'.
+Performing post-build steps
+arm-none-eabi-size "collector.axf"; # arm-none-eabi-objcopy -v -O binary "collector.axf" "collector.bin" ; # checksum -p MCXN947 -d "collector.bin";
+   text	   data	    bss	    dec	    hex	filename
+  19896	     12	   8740	  28648	   6fe8	collector.axf
+ 
+
+17:28:56 Build Finished. 0 errors, 0 warnings. (took 317ms)
+

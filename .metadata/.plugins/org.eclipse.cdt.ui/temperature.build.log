@@ -1,0 +1,11 @@
+17:47:02 **** Incremental Build of configuration Debug for project temperature ****
+make -r -j8 all 
+make[1]: Nothing to be done for 'main-build'.
+Performing post-build steps
+arm-none-eabi-size "temperature.axf"; # arm-none-eabi-objcopy -v -O binary "temperature.axf" "temperature.bin" ; # checksum -p MCXN947 -d "temperature.bin";
+   text	   data	    bss	    dec	    hex	filename
+  19764	     12	   8736	  28512	   6f60	temperature.axf
+ 
+
+17:47:03 Build Finished. 0 errors, 0 warnings. (took 279ms)
+

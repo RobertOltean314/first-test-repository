@@ -1,0 +1,17 @@
+LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/arch=x86_64
+LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/name=Local
+LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/os=linux
+configDescList=org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:frdmmcxn947_lwip_httpsrv_bm_cm33_core0 LinkServer Debug,org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:temperature LinkServer Debug
+eclipse.preferences.version=1
+org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:collector\ LinkServer\ Debug/activeLaunchMode=debug
+org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:collector\ LinkServer\ Debug/activeLaunchTarget=null\:---
+org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:frdmmcxn947_lpadc_temperature_measurement_cm33_core0\ LinkServer\ Debug/activeLaunchMode=debug
+org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:frdmmcxn947_lpadc_temperature_measurement_cm33_core0\ LinkServer\ Debug/activeLaunchTarget=null\:---
+org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:frdmmcxn947_lwip_httpsrv_bm_cm33_core0\ LinkServer\ Debug/activeLaunchMode=debug
+org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:frdmmcxn947_lwip_httpsrv_bm_cm33_core0\ LinkServer\ Debug/activeLaunchTarget=null\:---
+org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:temperature\ LinkServer\ Debug/activeLaunchMode=debug
+org.eclipse.launchbar.core.descriptorType.default\:collector\ LinkServer\ Debug/activeLaunchMode=debug
+org.eclipse.launchbar.core.descriptorType.default\:collector\ LinkServer\ Debug/activeLaunchTarget=org.eclipse.launchbar.core.launchTargetType.local\:Local
+org.eclipse.launchbar.core.descriptorType.default\:frdmmcxn947_lpadc_temperature_measurement_cm33_core0\ LinkServer\ Debug/activeLaunchMode=debug
+org.eclipse.launchbar.core.descriptorType.default\:frdmmcxn947_lpadc_temperature_measurement_cm33_core0\ LinkServer\ Debug/activeLaunchTarget=org.eclipse.launchbar.core.launchTargetType.local\:Local
+org.eclipse.launchbar.core.descriptorType.default\:frdmmcxn947_lwip_httpsrv_bm_cm33_core0\ LinkServer\ Debug/activeLaunchTarget=org.eclipse.launchbar.core.launchTargetType.local\:Local
