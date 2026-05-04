@@ -1,0 +1,11 @@
+# Build artifacts
+Debug/*.axf
+Debug/*.map
+Debug/**/*.o
+Debug/**/*.d
+Debug/**/*.a
+
+# IDE metadata
+.mcuxpressoide_packages_support/
+.metadata/
+.settings/
