@@ -6,12 +6,17 @@
  */
 
 #include "http_client.h"
+#include "mcux_config.h"
 
 #include "lwip/tcp.h"
 #include "lwip/timeouts.h"
 
 #include <stdio.h>
 #include <string.h>
+
+#ifndef BOARD_API_KEY
+#define BOARD_API_KEY ""
+#endif
 
 /* Maximum length of the HTTP request header (excluding body). */
 #define HTTP_CLIENT_MAX_HEADER_LEN 256
@@ -139,12 +144,14 @@ static err_t hc_connected(void *arg, struct tcp_pcb *tpcb, err_t err)
                           "Host: %s\r\n"
                           "Content-Type: %s\r\n"
                           "Content-Length: %u\r\n"
+                          "X-Api-Key: %s\r\n"
                           "Connection: close\r\n"
                           "\r\n",
                           conn->uri,
                           ipaddr_ntoa(&tpcb->remote_ip),
                           conn->content_type ? conn->content_type : "application/octet-stream",
-                          (unsigned int)conn->req_body_len);
+                          (unsigned int)conn->req_body_len,
+                          BOARD_API_KEY);
 
     if (header_len < 0 || (size_t)header_len >= sizeof(header)) {
         hc_finish(conn, -1, NULL, 0);
