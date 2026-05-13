@@ -30,6 +30,7 @@
 #include "temperature.h"
 
 #include "http_client.h"
+#include "ntp_client.h"
 
 #include <string.h>
 
@@ -64,8 +65,16 @@ void send_temperature(void)
 {
     /* Static so the buffer outlives this function — http_client_post() holds
      * a pointer to it until the async TCP connect completes. */
-    static char json[32];
-    snprintf(json, sizeof(json), "{\"temperature\":\"%u.%u\"}", g_tempInt, g_tempFrac);
+    static char json[80];
+    char read_at[24] = {0};
+    ntp_format_iso8601(read_at, sizeof(read_at));
+
+    if (read_at[0] != '\0')
+        snprintf(json, sizeof(json), "{\"temperature\":\"%u.%u\",\"read_at\":\"%s\"}",
+                 g_tempInt, g_tempFrac, read_at);
+    else
+        snprintf(json, sizeof(json), "{\"temperature\":\"%u.%u\"}",
+                 g_tempInt, g_tempFrac);
 
     ip_addr_t demo_server_ip;
     IP_ADDR4(&demo_server_ip, 10, 14, 121, 225);
@@ -160,6 +169,22 @@ int main(void)
     }
 
     set_ipv6_valid_state_cb(netif_ipv6_callback);
+
+    /* Sync time via NTP before starting temperature reporting. */
+    ip_addr_t ntp_server_ip;
+    IP_ADDR4(&ntp_server_ip, 216, 239, 35, 0);  /* time.google.com */
+    ntp_client_init(&ntp_server_ip);
+    PRINTF("\r\n Waiting for NTP sync...\r\n");
+    uint32_t ntp_deadline = sys_now() + 5000U;
+    while (!ntp_is_synced() && (sys_now() < ntp_deadline))
+    {
+        ethernetif_input(&netif);
+        sys_check_timeouts();
+    }
+    if (ntp_is_synced())
+        PRINTF(" NTP synced.\r\n");
+    else
+        PRINTF(" NTP sync failed — read_at will be set by server.\r\n");
 
     PRINTF("\r\n***********************************************************\r\n");
     PRINTF(" HTTP Client example\r\n");
