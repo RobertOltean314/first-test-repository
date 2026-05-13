@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_22_175237) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_06_000001) do
   create_table "temperature_data", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -23,6 +23,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_22_175237) do
 
   create_table "temperature_readings", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.datetime "read_at", null: false
     t.float "temperature"
     t.datetime "updated_at", null: false
   end
