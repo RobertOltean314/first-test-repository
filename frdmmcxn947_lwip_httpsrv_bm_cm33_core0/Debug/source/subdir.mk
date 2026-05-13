@@ -6,18 +6,21 @@
 C_SRCS += \
 ../source/http_client.c \
 ../source/lwip_httpsrv_bm.c \
+../source/ntp_client.c \
 ../source/semihost_hardfault.c \
 ../source/temperature.c 
 
 C_DEPS += \
 ./source/http_client.d \
 ./source/lwip_httpsrv_bm.d \
+./source/ntp_client.d \
 ./source/semihost_hardfault.d \
 ./source/temperature.d 
 
 OBJS += \
 ./source/http_client.o \
 ./source/lwip_httpsrv_bm.o \
+./source/ntp_client.o \
 ./source/semihost_hardfault.o \
 ./source/temperature.o 
 
@@ -34,7 +37,7 @@ source/%.o: ../source/%.c source/subdir.mk
 clean: clean-source
 
 clean-source:
-	-$(RM) ./source/http_client.d ./source/http_client.o ./source/lwip_httpsrv_bm.d ./source/lwip_httpsrv_bm.o ./source/semihost_hardfault.d ./source/semihost_hardfault.o ./source/temperature.d ./source/temperature.o
+	-$(RM) ./source/http_client.d ./source/http_client.o ./source/lwip_httpsrv_bm.d ./source/lwip_httpsrv_bm.o ./source/ntp_client.d ./source/ntp_client.o ./source/semihost_hardfault.d ./source/semihost_hardfault.o ./source/temperature.d ./source/temperature.o
 
 .PHONY: clean-source
 
