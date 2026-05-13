@@ -2,6 +2,8 @@
 
 one:
   temperature: 1.5
+  read_at: 2026-05-06 09:00:00
 
 two:
   temperature: 1.5
+  read_at: 2026-05-06 10:00:00
