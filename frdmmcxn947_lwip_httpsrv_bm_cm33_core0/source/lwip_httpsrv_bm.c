@@ -22,7 +22,6 @@
 #include <string.h>
 #include "http_client.h"
 
-
 #include "board.h"
 #include "app.h"
 #include "fsl_phy.h"
@@ -42,17 +41,25 @@
 #define EXAMPLE_NETIF_INIT_FN ethernetif0_init
 #endif
 
+#define MAX_RETRIES 3
+
 /*******************************************************************************
  * Prototypes
  ******************************************************************************/
 static void http_client_demo_result(void *arg, int status_code,
                                     const char *body, u16_t body_len);
+static void do_post(void);
 
 /*******************************************************************************
  * Variables
  ******************************************************************************/
 
 static phy_handle_t phyHandle;
+
+/* Shared state for send + retry logic. */
+static char s_json[80];
+static int  s_retry_count  = 0;
+static int  s_send_pending = 0;  /* 1 while a POST (or retry) is in flight */
 
 /*******************************************************************************
  * Code
@@ -61,29 +68,42 @@ static phy_handle_t phyHandle;
 extern volatile uint32_t g_tempInt;
 extern volatile uint32_t g_tempFrac;
 
+/* Fire a POST with the current contents of s_json. */
+static void do_post(void)
+{
+    ip_addr_t server_ip;
+    IP_ADDR4(&server_ip, 10, 14, 121, 225);
+
+    s_send_pending = 1;
+    http_client_post(&server_ip, 8080,
+                     "/data",
+                     "application/json",
+                     s_json, (u16_t)strlen(s_json),
+                     http_client_demo_result, NULL);
+}
+
 void send_temperature(void)
 {
-    /* Static so the buffer outlives this function — http_client_post() holds
-     * a pointer to it until the async TCP connect completes. */
-    static char json[80];
+    if (s_send_pending)
+    {
+        PRINTF(" [retry] send in progress, skipping new reading.\r\n");
+        return;
+    }
+
     char read_at[24] = {0};
     ntp_format_iso8601(read_at, sizeof(read_at));
 
     if (read_at[0] != '\0')
-        snprintf(json, sizeof(json), "{\"temperature\":\"%u.%u\",\"read_at\":\"%s\"}",
+        snprintf(s_json, sizeof(s_json),
+                 "{\"temperature\":\"%u.%u\",\"read_at\":\"%s\"}",
                  g_tempInt, g_tempFrac, read_at);
     else
-        snprintf(json, sizeof(json), "{\"temperature\":\"%u.%u\"}",
+        snprintf(s_json, sizeof(s_json),
+                 "{\"temperature\":\"%u.%u\"}",
                  g_tempInt, g_tempFrac);
 
-    ip_addr_t demo_server_ip;
-    IP_ADDR4(&demo_server_ip, 10, 14, 121, 225);
-
-    http_client_post(&demo_server_ip, 8080,
-                     "/data",
-                     "application/json",
-                     json, (u16_t)strlen(json),
-                     http_client_demo_result, NULL);
+    s_retry_count = 0;
+    do_post();
 }
 
 static void print_ipv6_addresses(struct netif *netif)
@@ -115,14 +135,38 @@ static void http_client_demo_result(void *arg, int status_code,
                                     const char *body, u16_t body_len)
 {
     (void)arg;
+    s_send_pending = 0;
+
     PRINTF("\r\n--- HTTP Client POST Result ---\r\n");
-    PRINTF(" Status code: %d\r\n", status_code);
+    PRINTF(" Status code : %d\r\n", status_code);
     if (body != NULL && body_len > 0)
     {
         PRINTF(" Body (%u bytes): %.*s\r\n", (unsigned int)body_len,
                (int)body_len, body);
     }
-    PRINTF("-------------------------------\r\n");
+
+    if (status_code == 201)
+    {
+        s_retry_count = 0;
+        PRINTF(" OK — data sent successfully.\r\n");
+        PRINTF("-------------------------------\r\n");
+        return;
+    }
+
+    /* Send failed — retry up to MAX_RETRIES times. */
+    if (s_retry_count < MAX_RETRIES)
+    {
+        s_retry_count++;
+        PRINTF(" Send failed, retry %d/%d...\r\n", s_retry_count, MAX_RETRIES);
+        PRINTF("-------------------------------\r\n");
+        do_post();
+    }
+    else
+    {
+        PRINTF(" Send failed after %d retries, giving up.\r\n", MAX_RETRIES);
+        PRINTF("-------------------------------\r\n");
+        s_retry_count = 0;
+    }
 }
 
 int main(void)
