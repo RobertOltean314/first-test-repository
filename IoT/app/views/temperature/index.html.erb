@@ -41,16 +41,16 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
   <script>
-    const readings = <%= raw @readings.reverse.map { |r|
-      { x: r.read_at.iso8601, y: r.temperature }
-    }.to_json %>;
+    const labels = <%= raw @readings.reverse.map { |r| r.read_at.iso8601 }.to_json %>;
+    const values = <%= raw @readings.reverse.map { |r| r.temperature }.to_json %>;
 
     new Chart(document.getElementById("tempChart"), {
       type: "line",
       data: {
+        labels: labels,
         datasets: [{
           label: "Temperature (°C)",
-          data: readings,
+          data: values,
           borderColor: "#2563eb",
           backgroundColor: "rgba(37,99,235,0.1)",
           tension: 0.3,
@@ -59,7 +59,6 @@
         }]
       },
       options: {
-        parsing: false,
         scales: {
           x: {
             type: "time",
