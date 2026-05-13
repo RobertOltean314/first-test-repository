@@ -12,9 +12,9 @@ class TemperatureReadingTest < ActiveSupport::TestCase
     assert_includes reading.errors[:temperature], "can't be blank"
   end
 
-  test "invalid without read_at" do
+  test "auto-fills read_at when not provided" do
     reading = TemperatureReading.new(temperature: 23.5)
-    assert_not reading.valid?
-    assert_includes reading.errors[:read_at], "can't be blank"
+    assert reading.valid?
+    assert_not_nil reading.read_at
   end
 end

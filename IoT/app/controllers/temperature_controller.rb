@@ -2,7 +2,11 @@ class TemperatureController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def index
-    render json: TemperatureReading.all.order(read_at: :desc)
+    @readings = TemperatureReading.all.order(read_at: :desc)
+    respond_to do |format|
+      format.html
+      format.json { render json: @readings }
+    end
   end
 
   def create

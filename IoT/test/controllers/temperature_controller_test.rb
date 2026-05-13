@@ -10,12 +10,12 @@ class TemperatureControllerTest < ActionDispatch::IntegrationTest
     assert_response :created
   end
 
-  test "returns 422 when read_at is missing" do
+  test "uses current time when read_at is missing" do
     post "/data",
          params: { temperature: "24.5" }.to_json,
          headers: { "Content-Type" => "application/json" }
 
-    assert_response :unprocessable_entity
+    assert_response :created
   end
 
   test "GET returns all readings ordered by read_at descending" do
@@ -24,7 +24,7 @@ class TemperatureControllerTest < ActionDispatch::IntegrationTest
     older = TemperatureReading.create!(temperature: 22.0, read_at: 2.hours.ago)
     newer = TemperatureReading.create!(temperature: 25.0, read_at: 1.hour.ago)
 
-    get "/data"
+    get "/data", headers: { "Accept" => "application/json" }
 
     assert_response :ok
 
